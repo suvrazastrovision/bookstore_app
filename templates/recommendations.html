@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Suggest a Read · Little Library{% endblock %}
+{% block content %}
+  <h1>Find your next favorite</h1>
+  <p class="intro">
+    Get a suggestion inspired by your books and ratings. When you request one,
+    your library’s titles, authors, years, and ratings are sent to OpenAI.
+  </p>
+  <form class="form-card" action="{{ url_for('recommendations') }}" method="POST">
+    <label for="preference">Anything you’re in the mood for? <span class="muted">(optional)</span></label>
+    <input type="text" id="preference" name="preference" maxlength="500"
+           placeholder="e.g. a thoughtful science-fiction story">
+    <p><button type="submit">Suggest a book</button></p>
+  </form>
+  {% if suggestion %}
+    <section class="card" aria-live="polite">
+      <h2>Your recommendation</h2>
+      <p>{{ suggestion }}</p>
+    </section>
+  {% endif %}
+{% endblock %}

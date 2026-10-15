@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Little Library{% endblock %}</title>
+    <style>
+      :root { color-scheme: light; --ink: #24302c; --muted: #68736d; --paper: #fbf8f0; --card: #fffdf8; --green: #315b47; --line: #e5dfd2; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 system-ui, sans-serif; }
+      header { background: #e9efe5; border-bottom: 1px solid var(--line); }
+      .header-inner, main { width: min(100% - 2rem, 1000px); margin: 0 auto; }
+      .header-inner { min-height: 74px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+      .brand { color: var(--green); font: 700 1.35rem Georgia, serif; text-decoration: none; }
+      nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+      a { color: var(--green); }
+      main { padding: 2rem 0 4rem; }
+      h1, h2, h3 { font-family: Georgia, serif; line-height: 1.2; }
+      h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 1.3rem; }
+      .intro, .muted { color: var(--muted); }
+      .toolbar, .flash, .card, .form-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+      .toolbar, .flash, .form-card { padding: 1rem 1.2rem; margin: 1rem 0; }
+      .flash.success { border-left: 5px solid #528363; }
+      .flash.error { border-left: 5px solid #b44d43; }
+      .controls { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; }
+      label { display: block; font-weight: 650; margin-bottom: .3rem; }
+      input, select, button { font: inherit; border-radius: 8px; padding: .6rem .75rem; }
+      input, select { border: 1px solid #cfc8ba; background: white; color: var(--ink); }
+      button, .button { display: inline-block; border: 0; background: var(--green); color: white; padding: .6rem .9rem; border-radius: 8px; cursor: pointer; text-decoration: none; }
+      button:hover, .button:hover { background: #244735; }
+      button.danger { background: #a33e36; }
+      .book-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+      .card { padding: 1rem; }
+      .book-cover { width: 100%; height: 190px; object-fit: contain; background: #f2eee4; border-radius: 9px; }
+      .card h2 { margin: .8rem 0 .25rem; font-size: 1.3rem; }
+      .card h2 a { text-decoration: none; }
+      .card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; margin-top: 1rem; }
+      .rating-form { display: flex; align-items: end; gap: .4rem; }
+      .rating-form label { font-size: .85rem; }
+      .rating-form input { width: 5.5rem; }
+      .author-actions { border-top: 1px solid var(--line); margin-top: .9rem; padding-top: .8rem; }
+      .detail-layout { display: grid; grid-template-columns: minmax(160px, 260px) 1fr; gap: 2rem; align-items: start; }
+      .detail-layout .book-cover { height: 340px; }
+      @media (max-width: 600px) { .header-inner { align-items: flex-start; flex-direction: column; padding: 1rem 0; } .detail-layout { grid-template-columns: 1fr; } .detail-layout .book-cover { height: 230px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <a class="brand" href="{{ url_for('home') }}">📚 Little Library</a>
+        <nav aria-label="Main navigation">
+          <a href="{{ url_for('home') }}">Library</a>
+          <a href="{{ url_for('add_author') }}">Add author</a>
+          <a href="{{ url_for('add_book') }}">Add book</a>
+          <a href="{{ url_for('recommendations') }}">Suggest a read</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <p role="status" class="flash {{ category }}">{{ message }}</p>
+      {% endfor %}
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

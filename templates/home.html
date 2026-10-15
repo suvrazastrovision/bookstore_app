@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Library · Little Library{% endblock %}
+{% block content %}
+  <h1>Your reading shelf</h1>
+  <p class="intro">A cozy home for the books you love and the people who wrote them.</p>
+
+  <section class="toolbar" aria-label="Find and sort books">
+    <form action="{{ url_for('home') }}" method="GET" class="controls">
+      <div>
+        <label for="q">Search your books</label>
+        <input type="search" id="q" name="q" value="{{ search_query }}"
+               placeholder="Title or ISBN">
+      </div>
+      <input type="hidden" name="sort" value="{{ sort }}">
+      <button type="submit">Search</button>
+      {% if search_query %}
+        <a href="{{ url_for('home', sort=sort) }}">Clear search</a>
+      {% endif %}
+    </form>
+    <p class="muted">Sort by:
+      <a href="{{ url_for('home', sort='title', q=search_query) }}" {% if sort == 'title' %}aria-current="true"{% endif %}>Title</a>
+      ·
+      <a href="{{ url_for('home', sort='author', q=search_query) }}" {% if sort == 'author' %}aria-current="true"{% endif %}>Author</a>
+    </p>
+  </section>
+
+  <section class="book-grid" aria-label="Books">
+    {% for book in books %}
+      <article class="card">
+        <img class="book-cover"
+             src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg?default=false"
+             alt="Cover of {{ book.title }}" loading="lazy">
+        <h2><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a></h2>
+        <p>by <a href="{{ url_for('author_detail', author_id=book.author.id) }}">{{ book.author.name }}</a></p>
+        <p class="muted">ISBN {{ book.isbn }} · {{ book.publication_year }}</p>
+        <p>{% if book.rating %}Your rating: <strong>{{ book.rating }}/10</strong>{% else %}<span class="muted">Not rated yet</span>{% endif %}</p>
+        <div class="card-actions">
+          <form action="{{ url_for('rate_book', book_id=book.id) }}" method="POST" class="rating-form">
+            <div>
+              <label for="rating-{{ book.id }}">Rate (1–10)</label>
+              <input type="number" id="rating-{{ book.id }}" name="rating"
+                     min="1" max="10" value="{{ book.rating or '' }}" placeholder="—">
+            </div>
+            <button type="submit">Save</button>
+          </form>
+          <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
+            <button type="submit" class="danger">Delete book</button>
+          </form>
+        </div>
+        <div class="author-actions">
+          <form action="{{ url_for('delete_author', author_id=book.author.id) }}" method="POST">
+            <button type="submit" class="danger">Delete {{ book.author.name }} and all their books</button>
+          </form>
+        </div>
+      </article>
+    {% else %}
+      <p>{% if search_query %}No books match “{{ search_query }}”. Try another title or ISBN.{% else %}Your shelf is empty. Add an author, then add a book to get started.{% endif %}</p>
+    {% endfor %}
+  </section>
+{% endblock %}

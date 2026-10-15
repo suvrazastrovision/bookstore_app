@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ author.name }} · Little Library{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('home') }}">← Back to the library</a></p>
+  <h1>{{ author.name }}</h1>
+  <p class="intro">
+    {% if author.birth_date %}Born {{ author.birth_date.strftime('%B %d, %Y') }}{% endif %}
+    {% if author.date_of_death %} · Died {{ author.date_of_death.strftime('%B %d, %Y') }}{% endif %}
+  </p>
+  <h2>Books on your shelf</h2>
+  {% if author.books %}
+    <ul>
+      {% for book in author.books|sort(attribute='title') %}
+        <li><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a> ({{ book.publication_year }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No books by this author are currently in your library.</p>
+  {% endif %}
+  <form action="{{ url_for('delete_author', author_id=author.id) }}" method="POST">
+    <button type="submit" class="danger">Delete author and all their books</button>
+  </form>
+{% endblock %}

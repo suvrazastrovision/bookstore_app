@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Add an Author · Little Library{% endblock %}
+{% block content %}
+  <h1>Welcome a new author</h1>
+  <p class="intro">Add the writer whose work deserves a place on your shelf.</p>
+  <form class="form-card" action="{{ url_for('add_author') }}" method="POST">
+    <p>
+      <label for="name">Author name</label>
+      <input type="text" id="name" name="name" required>
+    </p>
+    <p>
+      <label for="birth_date">Birth date</label>
+      <input type="date" id="birth_date" name="birth_date" required>
+    </p>
+    <p>
+      <label for="date_of_death">Date of death <span class="muted">(optional)</span></label>
+      <input type="date" id="date_of_death" name="date_of_death">
+    </p>
+    <button type="submit">Add author</button>
+  </form>
+{% endblock %}
