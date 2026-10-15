@@ -1,6 +1,6 @@
 # Little Library
 
-A Flask app for cataloging books, authors, and ratings, with search and optional AI recommendations.
+A demo Flask app for cataloging books, authors, and ratings, with search and optional AI recommendations.
 
 ## Run
 
