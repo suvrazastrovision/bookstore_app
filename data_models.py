@@ -1,9 +1,13 @@
+"""SQLAlchemy database and model definitions for the book catalog."""
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 
 class Author(db.Model):
+    """Represent an author and their associated books."""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
     birth_date = db.Column(db.Date, nullable=True)
@@ -13,10 +17,13 @@ class Author(db.Model):
     )
 
     def __repr__(self):
+        """Return a concise representation of the author."""
         return f"Author(id={self.id}, name={self.name!r})"
 
 
 class Book(db.Model):
+    """Represent a book and its catalog metadata."""
+
     __table_args__ = (
         db.CheckConstraint(
             "rating IS NULL OR rating BETWEEN 1 AND 10",
@@ -35,4 +42,5 @@ class Book(db.Model):
     author = db.relationship("Author", back_populates="books")
 
     def __repr__(self):
+        """Return a concise representation of the book."""
         return f"Book(id={self.id}, title={self.title!r})"
